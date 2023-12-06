@@ -1,7 +1,10 @@
+"""Advent of code day 1 (part 2)."""
+
 import regex
 
 
 def day_one(filename):
+    """Return the sum of the numbers formed by the first and last digit in each line."""
     lookup = {
         "zero": "0",
         "one": "1",

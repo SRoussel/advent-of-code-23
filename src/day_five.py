@@ -1,14 +1,21 @@
+"""Advent of code day 5 (part 2)."""
+
+
 import re
 import intervaltree
 import math
 
 
 class MapType:
+    """Mapping class."""
+
     def __init__(self):
+        """Construct a map."""
         self.tree = intervaltree.IntervalTree()
         self.tree[0:math.inf] = 0
 
     def add(self, dest_start, source_start, length):
+        """Add a interval to the map."""
         def data_reducer(a, b):
             return dest_start - source_start
 
@@ -17,6 +24,7 @@ class MapType:
         self.tree.merge_equals(data_reducer)
 
     def convert_tree(self, tree):
+        """Convert a tree using the map."""
         new_tree = intervaltree.IntervalTree()
         for item in tree:
             converted = self.convert_range(item)
@@ -24,9 +32,11 @@ class MapType:
         return new_tree
 
     def convert_range(self, range):
+        """Convert a range using the map."""
         return (self.convert(range[0]), self.convert(range[1] - 1) + 1)
 
     def convert(self, value):
+        """Convert a value using the map."""
         try:
             return value + sorted(self.tree[value])[0].data
         except IndexError:
@@ -34,6 +44,7 @@ class MapType:
 
 
 def intersection(a, b):
+    """Return the intersection of a and b."""
     splits = (a | b)
     splits.split_overlaps()
     a_int_b = intervaltree.IntervalTree(filter(lambda r: a.overlaps(r) and b.overlaps(r), splits))
@@ -42,6 +53,7 @@ def intersection(a, b):
 
 
 def day_five(filename):
+    """Return the lowest location number corresponding to a starting seed."""
     file = open(filename)
     seed_line = []
     mappings = [MapType() for n in range(7)]

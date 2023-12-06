@@ -1,9 +1,13 @@
+"""Advent of code day 2 (part 2)."""
+
+
 from functools import reduce
 from operator import mul
 import re
 
 
 def day_two(filename):
+    """Return the sum of the powers of each game."""
     file = open(filename)
     sum = 0
 

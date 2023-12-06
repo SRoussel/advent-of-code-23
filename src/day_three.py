@@ -1,4 +1,8 @@
+"""Advent of code day 3 (part 2)."""
+
+
 def seek(values, i, j):
+    """Get the number including (i, j)."""
     num_cols = len(values[0])
 
     list = [values[i][j]]
@@ -25,6 +29,7 @@ def seek(values, i, j):
 
 
 def get_neighbors(values, i, j):
+    """Return the indices neighboring (i, j) in values."""
     num_rows = len(values)
     num_cols = len(values[0])
     neighbors = set()
@@ -65,6 +70,7 @@ def get_neighbors(values, i, j):
 
 
 def day_three(filename):
+    """Return the sum of the gear ratios."""
     file = open(filename)
     values = [[char for char in line.rstrip('\n')] for line in file]
     sum = 0

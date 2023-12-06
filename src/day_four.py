@@ -1,3 +1,6 @@
+"""Advent of code day 4 (part 2)."""
+
+
 import collections
 import re
 
@@ -5,6 +8,7 @@ global_counter = dict()
 
 
 def count(index, copies):
+    """Return the number of function calls."""
     if index in global_counter:
         return global_counter[index]
 
@@ -19,6 +23,7 @@ def count(index, copies):
 
 
 def day_four(filename):
+    """Return the total number of scratchcards."""
     file = open(filename)
     lines = []
 
