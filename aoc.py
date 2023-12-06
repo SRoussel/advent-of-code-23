@@ -194,6 +194,15 @@ class MapType:
         self.tree.split_overlaps()
         self.tree.merge_equals(data_reducer)
 
+    def convert_tree(self, tree):
+        new_tree = intervaltree.IntervalTree()
+        for item in tree:
+            print(item)
+            converted = self.convert_range(item)
+            new_tree[converted[0]:converted[1]] = 1
+        return new_tree
+
+
     def convert_range(self, range):
         return (self.convert(range[0]), self.convert(range[1]))
 
@@ -214,7 +223,7 @@ def intersection(a, b):
 
 
 def day_five():
-    file = open('C:/Users/rousselsamuel/desktop/day_five_mini.txt')
+    file = open('day_five_mini.txt')
     seed_line = []
     seed_to_soil = MapType()
     soil_to_fertilizer = MapType()
@@ -245,16 +254,27 @@ def day_five():
 
     total_intersection = tree
 
-    for item in data:
-        total_intersection = intersection(total_intersection, item.tree)
-        // convert??
-
+    total_intersection = intersection(total_intersection, seed_to_soil.tree)
+    total_intersection = seed_to_soil.convert_tree(total_intersection)
+    print(total_intersection)
+    total_intersection = intersection(total_intersection, soil_to_fertilizer.tree)
+    total_intersection = soil_to_fertilizer.convert_tree(total_intersection)
+    print(total_intersection)
+    total_intersection = intersection(total_intersection, fertilizer_to_water.tree)
+    total_intersection = fertilizer_to_water.convert_tree(total_intersection)
+    print(total_intersection)
+    total_intersection = intersection(total_intersection, water_to_light.tree)
+    total_intersection = water_to_light.convert_tree(total_intersection)
+    print(total_intersection)
+    total_intersection = intersection(total_intersection, light_to_temp.tree)
+    print(total_intersection)
+    total_intersection = light_to_temp.convert_tree(total_intersection)
     for item in total_intersection:
         print(item)
         seeds.extend([item[0], item[1] - 1])
 
     for seed in seeds:
-        val = humidity_to_location.convert(temp_to_humidity.convert(light_to_temp.convert(water_to_light.convert(fertilizer_to_water.convert(soil_to_fertilizer.convert(seed_to_soil.convert(seed)))))))
+        val = humidity_to_location.convert(seed) #humidity_to_location.convert(temp_to_humidity.convert(light_to_temp.convert(water_to_light.convert(fertilizer_to_water.convert(soil_to_fertilizer.convert(seed_to_soil.convert(seed)))))))
 
         if val < min:
             min = val
