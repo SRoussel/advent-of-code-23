@@ -2,10 +2,10 @@ import re
 import regex
 from operator import mul
 from functools import reduce
-import string
 import collections
 import intervaltree
 import math
+
 
 def day_one():
     lookup = {
@@ -180,7 +180,6 @@ def day_four():
     return sum([count(n, copies) for n in range(len(lines), 0, -1)])
 
 
-
 class MapType:
     def __init__(self):
         self.tree = intervaltree.IntervalTree()
@@ -197,18 +196,15 @@ class MapType:
     def convert_tree(self, tree):
         new_tree = intervaltree.IntervalTree()
         for item in tree:
-            print(item)
             converted = self.convert_range(item)
             new_tree[converted[0]:converted[1]] = 1
         return new_tree
 
-
     def convert_range(self, range):
-        return (self.convert(range[0]), self.convert(range[1]))
+        return (self.convert(range[0]), self.convert(range[1] - 1) + 1)
 
     def convert(self, value):
         try:
-            print(value + sorted(self.tree[value])[0].data)
             return value + sorted(self.tree[value])[0].data
         except IndexError:
             return value
@@ -223,67 +219,61 @@ def intersection(a, b):
 
 
 def day_five():
-    file = open('day_five_mini.txt')
+    file = open('day_five.txt')
     seed_line = []
-    seed_to_soil = MapType()
-    soil_to_fertilizer = MapType()
-    fertilizer_to_water = MapType()
-    water_to_light = MapType()
-    light_to_temp = MapType()
-    temp_to_humidity = MapType()
-    humidity_to_location = MapType()
-    data = [seed_to_soil, soil_to_fertilizer, fertilizer_to_water, water_to_light, light_to_temp, temp_to_humidity, humidity_to_location]
-    data_index = -1
+    mappings = [MapType() for n in range(7)]
+    mapping_index = -1
 
     for line in file:
         line = line.rstrip("\n")
         if "seeds:" in line:
             seed_line.extend([int(char) for char in re.split(r' +', line.strip())[1:]])
         elif ":" in line:
-            data_index += 1
+            mapping_index += 1
         elif line != '':
             parsed = [int(char) for char in re.split(r' +', line.strip())]
-            data[data_index].add(parsed[0], parsed[1], parsed[2])
+            mappings[mapping_index].add(parsed[0], parsed[1], parsed[2])
+
+    seeds = intervaltree.IntervalTree()
+    for i in range(0, len(seed_line), 2):
+        seeds[seed_line[i]:(seed_line[i] + seed_line[i+1])] = 1
+
+    intersections = seeds
+    for mapping in mappings:
+        intersections = intersection(intersections, mapping.tree)
+        intersections = mapping.convert_tree(intersections)
 
     min = math.inf
-    seeds = []
-    tree = intervaltree.IntervalTree()
-
-    for i in range(0, len(seed_line), 2):
-        tree[seed_line[i]:(seed_line[i] + seed_line[i+1])] = 1
-
-    total_intersection = tree
-
-    total_intersection = intersection(total_intersection, seed_to_soil.tree)
-    total_intersection = seed_to_soil.convert_tree(total_intersection)
-    print(total_intersection)
-    total_intersection = intersection(total_intersection, soil_to_fertilizer.tree)
-    total_intersection = soil_to_fertilizer.convert_tree(total_intersection)
-    print(total_intersection)
-    total_intersection = intersection(total_intersection, fertilizer_to_water.tree)
-    total_intersection = fertilizer_to_water.convert_tree(total_intersection)
-    print(total_intersection)
-    total_intersection = intersection(total_intersection, water_to_light.tree)
-    total_intersection = water_to_light.convert_tree(total_intersection)
-    print(total_intersection)
-    total_intersection = intersection(total_intersection, light_to_temp.tree)
-    print(total_intersection)
-    total_intersection = light_to_temp.convert_tree(total_intersection)
-    for item in total_intersection:
-        print(item)
-        seeds.extend([item[0], item[1] - 1])
-
-    for seed in seeds:
-        val = humidity_to_location.convert(seed) #humidity_to_location.convert(temp_to_humidity.convert(light_to_temp.convert(water_to_light.convert(fertilizer_to_water.convert(soil_to_fertilizer.convert(seed_to_soil.convert(seed)))))))
-
-        if val < min:
-            min = val
+    for item in intersections:
+        if item[0] < min:
+            min = item[0]
 
     return min
 
 
+def day_six():
+    file = open('day_six.txt')
+    times = [int(char) for char in re.split(r':', file.readline().strip().replace(' ', ''))[1:]]
+    distances = [int(char) for char in re.split(r':', file.readline().strip().replace(' ', ''))[1:]]
+
+    print(times)
+    print(distances)
+
+    result = []
+
+    for time, distance in zip(times, distances):
+        winners = []
+        for n in range(time):
+            if ((time * n) - (n * n) >= distance):
+                winners.append(n)
+        result.append(len(winners))
+
+    print(result)
+    return reduce(mul, result, 1)
+
+
 def main():
-    print(day_five())
+    print(day_six())
 
 
 if __name__ == "__main__":
