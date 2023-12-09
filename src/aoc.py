@@ -8,7 +8,8 @@ import day_four
 import day_five
 import day_six
 import day_seven
-
+import day_eight
+import day_nine
 
 day_funcs = [day_one.day_one,
              day_two.day_two,
@@ -16,7 +17,9 @@ day_funcs = [day_one.day_one,
              day_four.day_four,
              day_five.day_five,
              day_six.day_six,
-             day_seven.day_seven]
+             day_seven.day_seven,
+             day_eight.day_eight,
+             day_nine.day_nine]
 
 
 def main():
