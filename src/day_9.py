@@ -12,8 +12,8 @@ def extrapolate(sequence, backward=False):
         sequence[-1] + extrapolate(differences))
 
 
-def day_nine(filename):
-    """Return the number of steps required to reach ZZZ from AAA."""
+def run(filename):
+    """Return the next/previous value in the sequence."""
     file = open(filename)
     sequences = [[int(num) for num in line.split()] for line in file.readlines()]
     extrapolates = [extrapolate(sequence, True) for sequence in sequences]

@@ -6,7 +6,7 @@ from operator import mul
 import re
 
 
-def day_two(filename):
+def run(filename):
     """Return the sum of the powers of each game."""
     file = open(filename)
     sum = 0

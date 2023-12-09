@@ -6,7 +6,7 @@ from operator import mul
 from functools import reduce
 
 
-def day_six(filename):
+def run(filename):
     """Return the product of the number of ways each record can be beaten."""
     file = open(filename)
     times = [int(char) for char in re.split(r':', file.readline().strip().replace(' ', ''))[1:]]

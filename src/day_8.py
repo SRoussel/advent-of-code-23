@@ -10,7 +10,7 @@ def lcm(a, b):
     return abs(a * b) // math.gcd(a, b)
 
 
-def day_eight(filename):
+def run(filename):
     """Return the number of steps required to reach ZZZ from AAA."""
     file = open(filename)
 

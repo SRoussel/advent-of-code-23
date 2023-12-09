@@ -57,7 +57,7 @@ def compare_hands(lhs, rhs):
             return comp
 
 
-def day_seven(filename):
+def run(filename):
     """Return the total points from the input hands."""
     file = open(filename)
 

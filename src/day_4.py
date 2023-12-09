@@ -22,7 +22,7 @@ def count(index, copies):
     return total_count
 
 
-def day_four(filename):
+def run(filename):
     """Return the total number of scratchcards."""
     file = open(filename)
     lines = []

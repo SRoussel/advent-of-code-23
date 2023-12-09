@@ -52,7 +52,7 @@ def intersection(a, b):
     return a_int_b
 
 
-def day_five(filename):
+def run(filename):
     """Return the lowest location number corresponding to a starting seed."""
     file = open(filename)
     seed_line = []

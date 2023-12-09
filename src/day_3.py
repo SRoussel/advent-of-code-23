@@ -69,7 +69,7 @@ def get_neighbors(values, i, j):
     return neighbors
 
 
-def day_three(filename):
+def run(filename):
     """Return the sum of the gear ratios."""
     file = open(filename)
     values = [[char for char in line.rstrip('\n')] for line in file]
