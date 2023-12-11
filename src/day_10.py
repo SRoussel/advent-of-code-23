@@ -1,15 +1,19 @@
 """Advent of code day 10 (part 2)."""
 
 
-types = ["-", "|","L", "J", "7", "F"]
+types = ["-", "|", "L", "J", "7", "F"]
 
 
-def bounds_check(values, num_rows, num_cols):
-    return [value for value in values if value[0] >= 0 and value[0] < num_rows and value[1] >= 0 and value[1] < num_cols]
+def bounds_check(points, num_rows, num_cols):
+    """Return a bounds checked version of points."""
+    return [point for point in points if
+            point[0] >= 0 and point[0] < num_rows and
+            point[1] >= 0 and point[1] < num_cols]
 
 
 def connects_to(values, i, j, seed=None):
-    value = values[i][j] if seed == None else seed
+    """Return a list of all points connected to (i, j)."""
+    value = values[i][j] if seed is None else seed
     num_rows = len(values)
     num_cols = len(values[0])
 
@@ -30,19 +34,17 @@ def connects_to(values, i, j, seed=None):
 
 
 def find_start(values):
+    """Return the start point."""
     for i in range(len(values)):
         for j in range(len(values[0])):
             if values[i][j] == "S":
                 return (i, j)
-    
     return (-1, -1)
 
 
-loop = []
-
-
 def traverse(start, values):
-    loop.append(start)
+    """Traverse the loop, returning the distance of the furthest point."""
+    loop = [start]
     left, right = connects_to(values, start[0], start[1])
     left_previous = start
     right_previous = start
@@ -60,13 +62,15 @@ def traverse(start, values):
         right = right_neighbors[0]
         steps += 1
 
-    return steps
+    loop.append(left)
+    return steps, loop
 
 
 def run(filename):
+    """Return the number of points within the loop."""
     file = open(filename)
     values = [[char for char in line.rstrip('\n')] for line in file]
-    
+
     start = find_start(values)
     first_connections = []
 
@@ -76,7 +80,16 @@ def run(filename):
         if len(first_connections) == 2:
             values[start[0]][start[1]] = type
             break
-    
-    traverse(start, values)
-    print(loop)
-    return 0
+
+    steps, loop = traverse(start, values)
+
+    inside = 0
+    for i in range(len(values)):
+        not_in_loop = [(i, j) for j in range(len(values[0])) if (i, j) not in loop]
+        in_loop = [(i, j) for j in range(len(values[0])) if (i, j) in loop]
+
+        for point in not_in_loop:
+            ray = "".join([values[n[0]][n[1]] for n in in_loop if values[n[0]][n[1]] != "-" and n[1] > point[1]])
+            inside += 1 == (ray.count("|") + ray.count("L7") + ray.count("FJ")) % 2
+
+    return inside
