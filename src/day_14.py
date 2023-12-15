@@ -3,19 +3,13 @@
 
 def tilt(columns):
     """Return columns with rocks shifted north."""
-    for i in range(len(columns)):
-        for j in range(len(columns[0])):
-            if "O" == columns[i][j]:
-                k = j - 1
-                m = j
-                while k >= 0:
-                    if columns[i][k] == ".":
-                        columns[i][k] = "O"
-                        columns[i][m] = "."
-                        m = k
-                        k -= 1
-                    else:
-                        break
+    for item in columns:
+        for j in range(1, len(item)):
+            if item[j] == "O":
+                k = j
+                while k > 0 and item[k - 1] == ".":
+                    item[k - 1], item[k] = item[k], "."
+                    k -= 1
     return columns
 
 
@@ -32,14 +26,9 @@ def get_load(columns, index):
 
     while True:
         columns = rotate_90(tilt(rotate_90(tilt(rotate_90(tilt(rotate_90(tilt(columns))))))))
-
-        total = 0
-        for i in range(len(columns)):
-            for j in range(len(columns[0])):
-                if "O" == columns[i][j]:
-                    total += len(columns[0]) - j
-
+        total = sum(len(row) - i for row in columns for i, value in enumerate(row) if value == "O")
         str = "".join(item for col in columns for item in col)
+
         if str in states:
             return totals[states[str] + ((index - states[str]) % (count - states[str]))]
 

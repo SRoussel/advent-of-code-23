@@ -5,27 +5,21 @@ from collections import defaultdict
 from functools import reduce
 
 
-def hash(input):
-    """Hashing function."""
-    return reduce(lambda x, y: ((x + (ord(y))) * 17) % 256, input, 0)
+def insert(step, mapping):
+    """Insert step into mapping."""
+    lens, action = re.split("=|-", step.strip("\n"))
+    box = reduce(lambda x, y: ((x + (ord(y))) * 17) % 256, lens, 0)
+
+    if len(action):
+        mapping[box][lens] = action
+    else:
+        mapping[box].pop(lens, None)
 
 
 def run(filename):
-    """Return the total load after a billion cycles."""
+    """Return the sum of lens info."""
     mapping = defaultdict(dict)
-
-    for step in open(filename).read().split(","):
-        values = re.split("=|-", step.strip("\n"))
-        box = hash(values[0])
-
-        if len(values[1]):
-            mapping[box][values[0]] = values[1]
-        else:
-            mapping[box].pop(values[0], None)
-
-    total = 0
-    for key, value in mapping.items():
-        for i, (lens, focal_length) in enumerate(value.items()):
-            total += (key + 1) * (i + 1) * int(focal_length)
-
-    return total
+    list(map(lambda x: insert(x, mapping), open(filename).read().split(",")))
+    def calc(box, pos, focal): return (box + 1) * (pos + 1) * int(focal)
+    def inner(box, content): return sum([calc(box, pos, foc) for pos, foc in enumerate(content.values())])
+    return sum([inner(box, content) for box, content in mapping.items()])

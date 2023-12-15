@@ -53,16 +53,12 @@ def flip(block, i, j):
 
 def run(filename):
     """Return the sum of mirror indices after weighting."""
-    file = open(filename)
-
-    blocks = file.read().split("\n\n")
-
-    for i, block in enumerate(blocks):
-        blocks[i] = [[char for char in line] for line in block.split("\n")]
+    f = open(filename)
+    blocks = [[[x for x in row] for row in block.split("\n")] for block in f.read().split("\n\n")]
 
     total = 0
 
-    for count, block in enumerate(blocks):
+    for block in blocks:
         mirror = get_mirror(block)
         original = mirror
 

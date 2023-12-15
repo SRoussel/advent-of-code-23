@@ -6,19 +6,16 @@ from operator import mul
 import re
 
 
+def line_product(line):
+    """Return the product of the values in the line."""
+    counts = dict()
+    for num, color in re.findall(r"(\d+) (red|green|blue)", line):
+        if int(num) > counts.get(color, 0):
+            counts[color] = int(num)
+
+    return reduce(mul, counts.values(), 1)
+
+
 def run(filename):
     """Return the sum of the powers of each game."""
-    file = open(filename)
-    sum = 0
-
-    for line in file:
-        matches = re.findall(r"(\d+) (red|green|blue)", line)
-        counts = dict()
-
-        for match in matches:
-            if int(match[0]) > counts.get(match[1], 0):
-                counts[match[1]] = int(match[0])
-
-        sum += reduce(mul, counts.values(), 1)
-
-    return sum
+    return sum([line_product(line) for line in open(filename).readlines()])

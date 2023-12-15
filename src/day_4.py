@@ -3,23 +3,14 @@
 
 import collections
 import re
+from cachetools import cached
+from cachetools.keys import hashkey
 
-global_counter = dict()
 
-
+@cached(cache={}, key=lambda index, copies: hashkey(index))
 def count(index, copies):
     """Return the number of function calls."""
-    if index in global_counter:
-        return global_counter[index]
-
-    recursions = copies[index]
-    total_count = 1
-
-    for call in recursions:
-        total_count += count(call, copies)
-
-    global_counter[index] = total_count
-    return total_count
+    return 1 + sum(map(lambda call: count(call, copies), copies[index]))
 
 
 def run(filename):
