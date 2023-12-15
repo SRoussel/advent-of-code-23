@@ -31,11 +31,7 @@ def get_load(columns, index):
     count = 0
 
     while True:
-        columns = tilt(columns)
-        columns = tilt(rotate_90(columns))
-        columns = tilt(rotate_90(columns))
-        columns = tilt(rotate_90(columns))
-        columns = rotate_90(columns)
+        columns = rotate_90(tilt(rotate_90(tilt(rotate_90(tilt(rotate_90(tilt(columns))))))))
 
         total = 0
         for i in range(len(columns)):
