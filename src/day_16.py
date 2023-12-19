@@ -79,7 +79,7 @@ class Beam:
                     self.dir = Beam.Dir.East
                 elif self.dir == Beam.Dir.West:
                     self.dir = Beam.Dir.North
-        
+
         return None
 
 
@@ -105,14 +105,14 @@ def try_start(i, j, dir, grid):
 
     for i, j in coords:
         grid[i][j] = "#"
-    
+
     return len(coords)
 
 
 def run(filename):
     """Return the number of energized squares."""
     grid = [[x for x in line.strip("\n")] for line in open(filename).readlines()]
-    
+
     possible_starts = [(x, -1, Beam.Dir.East) for x in range(len(grid))]
     possible_starts.extend([(x, len(grid[0]), Beam.Dir.West) for x in range(len(grid))])
     possible_starts.extend([(-1, x, Beam.Dir.South) for x in range(len(grid[0]))])
