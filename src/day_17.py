@@ -18,30 +18,26 @@ def add_state(state, cost, grid, visited, queue):
     if i == len(grid) - 1 and j == len(grid[0]) - 1 and length >= 4:
         return cost
 
-
     state = (i, j, di, dj, length)
 
     if state not in visited:
-        visited[state] = cost
+        visited.add(state)
         queue[cost].append(state)
 
     return None
 
 
 def get_cost(grid):
-    visited = {}
+    visited = set()
     queue = defaultdict(list)
 
-    start_right = (0, 0, 0, 1, 0) # i, j, di, dj, len
-    start_down = (0, 0, 1, 0, 0)
-
-    add_state(start_right, 0, grid, visited, queue)
-    add_state(start_down, 0, grid, visited, queue)
+    add_state((0, 0, 0, 1, 0), 0, grid, visited, queue) # i, j, di, dj, len
+    add_state((0, 0, 1, 0, 0), 0, grid, visited, queue)
 
     while len(queue):
         cost = min(queue.keys())
         
-        for state in queue.pop(min(queue.keys())):
+        for state in queue.pop(cost):
             i, j, di, dj, length = state
 
             if length >= 4:
