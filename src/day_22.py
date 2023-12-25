@@ -65,6 +65,21 @@ class Brick():
         return f"({self.start.x}, {self.start.y}, {self.start.z}) - ({self.end.x}, {self.end.y}, {self.end.z})"
 
 
+def get_descendants(brick, tree):
+    if brick not in tree:
+        return set()
+
+    children = tree[brick]
+
+    descendants = set()
+    descendants.update(children)
+
+    for child in children:
+        descendants.update(get_descendants(child, tree))
+
+    return descendants
+
+
 def run(filename):
     """Return."""
     with open(filename) as file:
@@ -90,6 +105,7 @@ def run(filename):
 
 
     to_save = defaultdict(set)
+    others = defaultdict(set)
 
     for z, line in z_bottoms.items():
         to_move = set()
@@ -108,6 +124,8 @@ def run(filename):
                 if len(hit_bricks):
                     if len(hit_bricks) == 1:
                         to_save[next(iter(hit_bricks))].add(brick)
+                    for hit in hit_bricks:
+                        others[hit].add(brick)
                     break
                 else:
                     moves += 1
@@ -134,7 +152,9 @@ def run(filename):
         for brick in to_save:
             bricks.remove(brick)
 
-        for key, value in to_save.items():
-            print(key, value)
+    total = 0
 
-    return len(bricks)
+    for key in to_save:
+        total += len(get_descendants(key, others))
+
+    return total
